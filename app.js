@@ -1,5 +1,6 @@
 const express = require('express')
 const passport = require('passport')
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const app = express()
 const port = 3000
@@ -30,6 +31,14 @@ passport.use(new SamlStrategy(
 app.get('/', (req, res) => res.send('Hello World!'))
 
 app.get('/login',
+  passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
+  function(req, res) {
+    res.redirect('/');
+  }
+);
+
+app.post('/login/callback',
+  bodyParser.urlencoded({ extended: false }),
   passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
   function(req, res) {
     res.redirect('/');
