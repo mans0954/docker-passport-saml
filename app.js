@@ -9,13 +9,16 @@ var privateKey = fs.readFileSync(process.env["PASSPORT_SAML_PRIVATE_KEY"], 'utf-
 
 var SamlStrategy = require('passport-saml').Strategy;
 
+var ServiceFQDN = process.env["PASSPORT_SERVICE_FQDN"]
+
 app.use(passport.initialize());
 
 passport.use(new SamlStrategy(
   {
     path: '/login/callback',
     entryPoint: 'https://writelatex-idp.stag-overleaf.com/idp/profile/SAML2/Redirect/SSO',
-    issuer: 'passport-saml',
+    issuer: `https://${ServiceFQDN}/passport-saml`,
+    callbackUrl: `https://${ServiceFQDN}/login/callback`,
     privateCert: privateKey
   },
   function(profile, done) {
