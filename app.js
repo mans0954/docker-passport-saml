@@ -5,6 +5,10 @@ const port = 3000
 
 var SamlStrategy = require('passport-saml').Strategy;
 
+//var md =  SamlStrategy.generateServiceProviderMetadata(null,null)
+
+//console.log(md)
+
 app.use(passport.initialize());
 
 passport.use(new SamlStrategy(
@@ -31,6 +35,13 @@ app.get('/login',
     res.redirect('/');
   }
 );
+
+app.get('/Metadata',(req, res) => {
+  const samlStrategy = req._passport.instance._strategy('saml')
+  var signingCert=null
+  var metadata = samlStrategy.generateServiceProviderMetadata(signingCert,signingCert)
+  res.type('application/xml;charset=UTF-8').send(metadata)
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
