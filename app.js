@@ -1,13 +1,12 @@
 const express = require('express')
 const passport = require('passport')
+const fs = require('fs');
 const app = express()
 const port = 3000
 
+var privateKey = fs.readFileSync(process.env["PASSPORT_SAML_PRIVATE_KEY"], 'utf-8');
+
 var SamlStrategy = require('passport-saml').Strategy;
-
-//var md =  SamlStrategy.generateServiceProviderMetadata(null,null)
-
-//console.log(md)
 
 app.use(passport.initialize());
 
@@ -15,7 +14,8 @@ passport.use(new SamlStrategy(
   {
     path: '/login/callback',
     entryPoint: 'https://writelatex-idp.stag-overleaf.com/idp/profile/SAML2/Redirect/SSO',
-    issuer: 'passport-saml'
+    issuer: 'passport-saml',
+    privateCert: privateKey
   },
   function(profile, done) {
     findByEmail(profile.email, function(err, user) {
@@ -38,7 +38,7 @@ app.get('/login',
 
 app.get('/Metadata',(req, res) => {
   const samlStrategy = req._passport.instance._strategy('saml')
-  var signingCert=null
+  var signingCert=fs.readFileSync(process.env["PASSPORT_SAML_CERT"], 'utf-8');
   var metadata = samlStrategy.generateServiceProviderMetadata(signingCert,signingCert)
   res.type('application/xml;charset=UTF-8').send(metadata)
 });
