@@ -23,7 +23,8 @@ passport.use(new SamlStrategy(
     callbackUrl: `https://${ServiceFQDN}/login/callback`,
     privateCert: privateKey,
     decryptionPvk: privateKey,
-    cert: idpCert
+    cert: idpCert,
+    identifierFormat: null
   },
   function(profile, done) {
     findByEmail(profile.email, function(err, user) {
