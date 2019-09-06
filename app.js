@@ -27,12 +27,8 @@ passport.use(new SamlStrategy(
     identifierFormat: null
   },
   function(profile, done) {
-    findByEmail(profile.email, function(err, user) {
-      if (err) {
-        return done(err);
-      }
-      return done(null, user);
-    });
+    console.log(profile);
+    return done(null, profile);
   })
 );
 
