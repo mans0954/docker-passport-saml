@@ -51,7 +51,7 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/', (req, res) => res.send('<HTML><BODY><P>Please <A href="login/">Login</A></P></BODY></HTML>'))
 
 app.get('/login',
   passport.authenticate('saml', { failureRedirect: '/', failureFlash: true }),
