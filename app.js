@@ -21,8 +21,8 @@ passport.use(new SamlStrategy(
     entryPoint: 'https://writelatex-idp.stag-overleaf.com/idp/profile/SAML2/Redirect/SSO',
     issuer: `https://${ServiceFQDN}/passport-saml`,
     callbackUrl: `https://${ServiceFQDN}/login/callback`,
-    privateCert: privateKey
-    decryptionPvk: privateKey
+    privateCert: privateKey,
+    decryptionPvk: privateKey,
     cert: idpCert
   },
   function(profile, done) {
