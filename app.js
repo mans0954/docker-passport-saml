@@ -7,6 +7,8 @@ const port = 3000
 
 var privateKey = fs.readFileSync(process.env["PASSPORT_SAML_PRIVATE_KEY"], 'utf-8');
 
+var idpCert = fs.readFileSync(process.env["PASSPORT_SAML_IDP_CERT"], 'utf-8');
+
 var SamlStrategy = require('passport-saml').Strategy;
 
 var ServiceFQDN = process.env["PASSPORT_SERVICE_FQDN"]
@@ -20,6 +22,8 @@ passport.use(new SamlStrategy(
     issuer: `https://${ServiceFQDN}/passport-saml`,
     callbackUrl: `https://${ServiceFQDN}/login/callback`,
     privateCert: privateKey
+    decryptionPvk: privateKey
+    cert: idpCert
   },
   function(profile, done) {
     findByEmail(profile.email, function(err, user) {
