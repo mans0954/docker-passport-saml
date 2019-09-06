@@ -5,12 +5,6 @@ const fs = require('fs');
 const app = express()
 const port = 3000
 
-const user = {
-  issuer: null,
-  sessionIndex: null,
-  username: null
-};
-
 var privateKey = fs.readFileSync(process.env["PASSPORT_SAML_PRIVATE_KEY"], 'utf-8');
 
 var idpCert = fs.readFileSync(process.env["PASSPORT_SAML_IDP_CERT"], 'utf-8');
@@ -35,7 +29,7 @@ passport.use(new SamlStrategy(
   function(profile, done) {
     console.log("Profile Object:");
     console.log(profile);
-    const user1 = Object.create(user);
+    const user1 = {};
     user1.username = "user1";
     user1.issuer = profile.issuer;
     user1.sessionIndex = profile.sessionIndex;
@@ -44,6 +38,18 @@ passport.use(new SamlStrategy(
     done(null, user1);
   })
 );
+
+passport.serializeUser(function(user, done) {
+  console.log("serializeUser");
+  console.log(user);
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  console.log("deserializeUser");
+  console.log(user);
+  done(null, user);
+});
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
