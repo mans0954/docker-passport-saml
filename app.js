@@ -5,6 +5,10 @@ const fs = require('fs');
 const app = express()
 const port = 3000
 
+const user = {
+  username: null
+};
+
 var privateKey = fs.readFileSync(process.env["PASSPORT_SAML_PRIVATE_KEY"], 'utf-8');
 
 var idpCert = fs.readFileSync(process.env["PASSPORT_SAML_IDP_CERT"], 'utf-8');
@@ -28,7 +32,9 @@ passport.use(new SamlStrategy(
   },
   function(profile, done) {
     console.log(profile);
-    return done(null, profile);
+    const user1 = Object.create(user);
+    user1.username = "user1"
+    done(null, user1);
   })
 );
 
