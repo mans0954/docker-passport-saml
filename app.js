@@ -6,6 +6,8 @@ const app = express()
 const port = 3000
 
 const user = {
+  issuer: null,
+  sessionIndex: null,
   username: null
 };
 
@@ -31,9 +33,14 @@ passport.use(new SamlStrategy(
     identifierFormat: null
   },
   function(profile, done) {
+    console.log("Profile Object:");
     console.log(profile);
     const user1 = Object.create(user);
-    user1.username = "user1"
+    user1.username = "user1";
+    user1.issuer = profile.issuer;
+    user1.sessionIndex = profile.sessionIndex;
+    console.log("User Object:");
+    console.log(user1);
     done(null, user1);
   })
 );
